@@ -163,6 +163,7 @@ fun NoteDetailsBody(
             modifier = Modifier
                 .fillMaxWidth(),
             placeholder = {
+                TODO("Исправить")
                 if (note.title.isEmpty()) {
                     Text(
                         text = stringResource(R.string.label_title),
