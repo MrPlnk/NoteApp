@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">NoteApp</string>
+    <string name="home_screen_title">Заметки</string>
+
+    <string name="button_back">Назад</string>
+    <string name="button_add">Добавить</string>
+    <string name="button_save">Сохранить</string>
+    <string name="button_share_note">Поделиться заметкой</string>
+
+    <string name="label_its_empty">Тут пока пусто…</string>
+    <string name="label_text">Текст</string>
+    <string name="label_title">Заголовок</string>
+    <string name="label_share_note">Поделиться заметкой</string>
+
+    <string name="empty_note">Пустая заметка</string>
+</resources>
