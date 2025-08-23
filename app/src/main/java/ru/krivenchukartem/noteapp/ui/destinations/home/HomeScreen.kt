@@ -41,6 +41,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import ru.krivenchukartem.noteapp.ui.composable.ErrorMessage
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,25 +110,9 @@ fun HomeScreen(
                     .padding(dimensionResource(R.dimen.padding_small))
                     .fillMaxWidth()
             )
-            is HomeUiState.Error -> ErrorViewer(state.message)
+            is HomeUiState.Error -> ErrorMessage(state.message)
             HomeUiState.Loading -> {}
         }
-    }
-}
-
-@Composable
-fun ErrorViewer(
-    errorMessage: String,
-){
-    Card(
-        modifier = Modifier.fillMaxWidth()
-    ){
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(errorMessage)
-        }
-
     }
 }
 

@@ -1,6 +1,8 @@
 package ru.krivenchukartem.noteapp.ui.destinations.home
 
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.border
@@ -59,9 +61,11 @@ import androidx.core.content.ContextCompat.startActivity
 import kotlinx.coroutines.launch
 import ru.krivenchukartem.noteapp.R
 import ru.krivenchukartem.noteapp.domain.model.Note
+import ru.krivenchukartem.noteapp.ui.composable.ErrorMessage
 import ru.krivenchukartem.noteapp.ui.composable.NoteTopAppBar
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteDetailsScreen(
@@ -87,6 +91,7 @@ fun NoteDetailsScreen(
         bottomBar = {
             BottomAppBar(
                 actions = {
+                    val s = uiState as? NoteDetailsUIState.Success
                     IconButton(onClick = {
                         viewModel.deleteNote()
                         navigateBack()
@@ -94,19 +99,25 @@ fun NoteDetailsScreen(
                         Icon(imageVector = Icons.Default.Delete, contentDescription = "")
                     }
                     IconButton(onClick = {
-                        val s = uiState as? NoteDetailsUIState.Success ?: return@IconButton
-                        val message = viewModel.buildShareText(s, context.getString(R.string.empty_note))
+                        if (s != null) {
+                            val intent =
+                                viewModel.buildShareText(context.getString(R.string.empty_note))
 
-                        val intent = Intent(Intent.ACTION_SEND).apply {
-                            putExtra(Intent.EXTRA_TEXT, message)
-                            type = "text/plain"
+                            context.startActivity(
+                                Intent.createChooser(
+                                    intent,
+                                    context.getString(R.string.label_share_note)
+                                )
+                            )
                         }
-                        context.startActivity(Intent.createChooser(intent, context.getString(R.string.label_share_note)))
                     }) {
                         Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(R.string.button_share_note))
                     }
-                    IconButton(onClick = {}) {
-                        Icon(imageVector = Icons.Default.Star, contentDescription = "")
+                    if (s != null){
+                        Text(
+                            text = viewModel.getLastDateUpdate(stringResource(R.string.label_last_update)),
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
                 },
                 floatingActionButton = {
@@ -126,8 +137,8 @@ fun NoteDetailsScreen(
         }
     ) { innerPadding ->
         when (uiState) {
-            is NoteDetailsUIState.Error -> {}
-            NoteDetailsUIState.Loading -> {}
+            is NoteDetailsUIState.Error -> ErrorMessage(uiState.message)
+            NoteDetailsUIState.Loading -> Text(stringResource(R.string.label_wait))
             is NoteDetailsUIState.Success -> NoteDetailsBody(
                 localState = uiState,
                 onTitleChanged = viewModel::changeTitle,
@@ -157,43 +168,14 @@ fun NoteDetailsBody(
             .imePadding()
             .navigationBarsPadding()
     ) {
-        TextField(
-            value = note.title,
-            onValueChange = {onTitleChanged(it)},
-            modifier = Modifier
-                .fillMaxWidth(),
-            placeholder = {
-                if (note.title.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.label_title),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                    )
-                }
-            },
-            textStyle = MaterialTheme.typography.titleLarge.copy(
-                color = MaterialTheme.colorScheme.onSurface
-            ),
-            singleLine = false,
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.primary
-            ),
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Sentences,
-                imeAction = ImeAction.Next,
-                autoCorrectEnabled = true
-            )
+
+        NoteTitleField(
+            text = note.title,
+            onTextChange = onTitleChanged,
+            placeholder = stringResource(R.string.label_title)
         )
 
-        BasicNoteFieldAutoScroll(
+        NoteBodyFieldAutoScroll(
             text = note.body,
             onTextChange = onBodyChanged,
             placeholder = stringResource(R.string.label_text)
@@ -202,9 +184,53 @@ fun NoteDetailsBody(
     }
 }
 
+@Composable
+fun NoteTitleField(
+    text: String,
+    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    placeholder: String = ""
+){
+    TextField(
+        value = text,
+        onValueChange = {onTextChange(it)},
+        modifier = modifier
+            .fillMaxWidth(),
+        placeholder = {
+            if (text.isEmpty()) {
+                Text(
+                    text = placeholder,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                )
+            }
+        },
+        textStyle = MaterialTheme.typography.titleLarge.copy(
+            color = MaterialTheme.colorScheme.onSurface
+        ),
+        singleLine = false,
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            disabledContainerColor = Color.Transparent,
+            errorContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            cursorColor = MaterialTheme.colorScheme.primary
+        ),
+        keyboardOptions = KeyboardOptions(
+            capitalization = KeyboardCapitalization.Sentences,
+            imeAction = ImeAction.Next,
+            autoCorrectEnabled = true
+        )
+    )
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BasicNoteFieldAutoScroll(
+fun NoteBodyFieldAutoScroll(
     text: String,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,

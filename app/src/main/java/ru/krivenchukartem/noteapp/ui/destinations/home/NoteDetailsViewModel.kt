@@ -1,6 +1,8 @@
 package ru.krivenchukartem.noteapp.ui.destinations.home
 
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,6 +21,9 @@ import ru.krivenchukartem.noteapp.domain.useCase.DeleteNoteUseCase
 import ru.krivenchukartem.noteapp.domain.useCase.SaveNoteUseCase
 import ru.krivenchukartem.noteapp.domain.useCase.UpdateNoteUseCase
 import ru.krivenchukartem.noteapp.domain.useCase.UpsertNoteUseCase
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @HiltViewModel
 class NoteDetailsViewModel @Inject constructor(
@@ -32,6 +37,7 @@ class NoteDetailsViewModel @Inject constructor(
         private set
 
     private val noteId: Long = checkNotNull(savedStateHandle["noteId"])
+
 
     init {
         load()
@@ -50,7 +56,7 @@ class NoteDetailsViewModel @Inject constructor(
                         updatedAt = note.updatedAt,
                         createdAt = note.createdAt,
                         form = note.toNoteForm(),
-                        isSaving = false
+                        isSaving = true
                     )
                 }
             } catch (t: Throwable){
@@ -61,12 +67,18 @@ class NoteDetailsViewModel @Inject constructor(
 
     fun changeTitle(newTitle: String) {
         val s = uiState as? NoteDetailsUIState.Success ?: return
-        uiState = s.copy(form = s.form.copy(title = newTitle))
+        uiState = s.copy(
+            form = s.form.copy(title = newTitle),
+            isSaving = false
+        )
     }
 
     fun changeBody(newBody: String) {
         val s = uiState as? NoteDetailsUIState.Success ?: return
-        uiState = s.copy(form = s.form.copy(body = newBody))
+        uiState = s.copy(
+            form = s.form.copy(body = newBody),
+            isSaving = false
+        )
     }
 
     fun deleteNote(){
@@ -83,28 +95,47 @@ class NoteDetailsViewModel @Inject constructor(
     }
 
     fun saveNote() {
-        viewModelScope.launch {
-            val s = uiState as? NoteDetailsUIState.Success ?: return@launch
-            uiState = s.copy(isSaving = true)
-            try {
-                if (!s.form.title.isBlank() || !s.form.body.isBlank()){
-                    upsertNote.invoke(s.noteId, s.form.title, s.form.body)
-                    uiState = s.copy(isSaving = false)
+        val s = uiState as? NoteDetailsUIState.Success ?: return
+        if (!s.isSaving) {
+            viewModelScope.launch {
+                try {
+                    if (!s.form.title.isBlank() || !s.form.body.isBlank()) {
+                        upsertNote.invoke(s.noteId, s.form.title, s.form.body)
+                        uiState = s.copy(isSaving = true)
+                    }
+                } catch (t: Throwable) {
+                    uiState = NoteDetailsUIState.Error(t.message ?: "Неизвестная ошибка")
                 }
-            } catch (t: Throwable) {
-                uiState = NoteDetailsUIState.Error(t.message ?: "Неизвестная ошибка")
             }
         }
     }
 
-    fun buildShareText(state: NoteDetailsUIState.Success, defaultText: String = ""): String{
-        val note = state.form
+    fun buildShareText(defaultText: String = ""): Intent?{
+        val s = uiState as? NoteDetailsUIState.Success ?: return null
+        val note = s.form
         val parts = listOf(note.title, note.body)
             .map { it.trim() }
             .filter { it.isNotEmpty() }
-        return if (parts.isEmpty()) defaultText else parts.joinToString("\n\n")
+
+        val message = if (parts.isEmpty()) defaultText else parts.joinToString("\n\n")
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_TEXT, message)
+            type = "text/plain"
+        }
+        return intent
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getLastDateUpdate(defaultText: String = ""): String{
+        val s = uiState as? NoteDetailsUIState.Success ?: return ""
+        if (s.noteId == 0L) return ""
+        val time = Instant.ofEpochMilli(s.updatedAt)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
+        val formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")
+        val formatted = time.format(formatter)
+        return "$defaultText $formatted"
+    }
 }
 
 sealed interface NoteDetailsUIState{

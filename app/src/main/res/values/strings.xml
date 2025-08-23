@@ -11,6 +11,8 @@
     <string name="label_text">Текст</string>
     <string name="label_title">Заголовок</string>
     <string name="label_share_note">Поделиться заметкой</string>
+    <string name="label_last_update">Последнее обновление:</string>
+    <string name="label_wait">Пожалуйста, подождите…</string>
 
     <string name="empty_note">Пустая заметка</string>
 </resources>
