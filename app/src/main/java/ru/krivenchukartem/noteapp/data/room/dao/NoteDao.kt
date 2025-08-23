@@ -14,18 +14,26 @@ interface NoteDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNote(noteItem: NoteItem): Long
 
-    @Update
-    suspend fun updateNote(noteItem: NoteItem): Int
+    @Query("""
+        UPDATE NoteItem
+        SET title=:title, body=:body, updatedAt=:updatedAt
+        WHERE id=:id
+    """)
+    suspend fun updateNote(id: Long, title: String, body: String, updatedAt: Long): Int
 
-    @Delete
-    suspend fun deleteNote(noteItem: NoteItem)
+    @Query("DELETE FROM NoteItem WHERE id=:id")
+    suspend fun deleteNote(id: Long)
 
     @Query("SELECT * FROM NoteItem WHERE id = :reqId")
     suspend fun getNoteById(reqId: Long): NoteItem?
 
-    @Query("SELECT * FROM NoteItem ORDER BY title")
+    @Query("SELECT * FROM NoteItem ORDER BY createdAt DESC")
     fun getAllNotes(): Flow<List<NoteItem>>
 
-    @Query("SELECT * FROM NoteItem WHERE title LIKE :reqTitle || '%'")
-    fun getNotesByTitle(reqTitle: String): Flow<List<NoteItem>>
+    @Query("""
+        SELECT * FROM NoteItem WHERE
+        title LIKE '%' || :query || '%' OR body LIKE '%' || :query || '%'
+        ORDER BY createdAt DESC
+        """)
+    fun search(query: String): Flow<List<NoteItem>>
 }

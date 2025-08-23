@@ -8,7 +8,7 @@ class GetNoteByIdUseCaseSnapshot @Inject constructor(
     private val noteRepo: NoteRepo
 ) {
     suspend operator fun invoke(id: Long): Note? {
-        if (id == 0L) return Note(0, "", "")
+        if (id == 0L) return Note(0, "", "", 0L, 0L)
         val existingNote = noteRepo.getNoteById(id)
         return existingNote
 

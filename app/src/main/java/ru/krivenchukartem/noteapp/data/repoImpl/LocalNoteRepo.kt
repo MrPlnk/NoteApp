@@ -12,16 +12,23 @@ import javax.inject.Inject
 class LocalNoteRepo @Inject constructor(
     private val noteDao: NoteDao
 ): NoteRepo {
-    override suspend fun saveNote(note: Note): Long {
+    override suspend fun saveNote(title: String, body: String): Long {
+        val note = Note(
+            title = title,
+            body = body,
+            createdAt = System.currentTimeMillis(),
+            updatedAt = System.currentTimeMillis()
+        )
         return noteDao.insertNote(note.toEntity())
     }
 
-    override suspend fun updateNote(note: Note): Int {
-        return noteDao.updateNote(note.toEntity())
+    override suspend fun updateNote(id: Long, title: String, body: String): Int {
+        val updatedAt = System.currentTimeMillis()
+        return noteDao.updateNote(id, title, body, updatedAt)
     }
 
-    override suspend fun deleteNote(note: Note) {
-        noteDao.deleteNote(note.toEntity())
+    override suspend fun deleteNote(id: Long) {
+        noteDao.deleteNote(id)
     }
 
     override suspend fun getNoteById(id: Long): Note? {
@@ -37,8 +44,8 @@ class LocalNoteRepo @Inject constructor(
             }
     }
 
-    override fun getNotesByTitle(reqTitle: String): Flow<List<Note>> {
-        return noteDao.getNotesByTitle(reqTitle)
+    override fun searchNote(query: String): Flow<List<Note>> {
+        return noteDao.search(query)
             .map{ list ->
                 list.map{
                     it.toModel()

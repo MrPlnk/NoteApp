@@ -109,9 +109,25 @@ fun HomeScreen(
                     .padding(dimensionResource(R.dimen.padding_small))
                     .fillMaxWidth()
             )
-            is HomeUiState.Error -> {}
+            is HomeUiState.Error -> ErrorViewer(state.message)
             HomeUiState.Loading -> {}
         }
+    }
+}
+
+@Composable
+fun ErrorViewer(
+    errorMessage: String,
+){
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ){
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(errorMessage)
+        }
+
     }
 }
 

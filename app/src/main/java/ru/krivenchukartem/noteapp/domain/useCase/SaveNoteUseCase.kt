@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SaveNoteUseCase @Inject constructor(
     private val noteRepo: LocalNoteRepo
 ) {
-    suspend operator fun invoke(id: Long, title: String, body: String){
-        noteRepo.saveNote(Note(id, title, body))
+    suspend operator fun invoke(title: String, body: String){
+        noteRepo.saveNote(title, body)
     }
 }

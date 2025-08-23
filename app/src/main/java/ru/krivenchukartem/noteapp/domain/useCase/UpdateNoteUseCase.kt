@@ -8,6 +8,6 @@ class UpdateNoteUseCase @Inject constructor(
     private val noteRepo: LocalNoteRepo
 ) {
     suspend operator fun invoke(id: Long, title: String, body: String){
-        noteRepo.updateNote(Note(id, title, body))
+        noteRepo.updateNote(id, title, body)
     }
 }

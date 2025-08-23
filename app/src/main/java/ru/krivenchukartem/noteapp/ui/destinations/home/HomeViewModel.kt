@@ -13,13 +13,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import ru.krivenchukartem.noteapp.domain.useCase.GetAllNotesUseCaseStream
-import ru.krivenchukartem.noteapp.domain.useCase.GetNotesByTitleUseCaseStream
+import ru.krivenchukartem.noteapp.domain.useCase.SearchNoteUseCaseStream
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAllNotes: GetAllNotesUseCaseStream,
-    private val getNotesByTitle: GetNotesByTitleUseCaseStream
+    private val searchNote: SearchNoteUseCaseStream
 ): ViewModel() {
 
     val query = MutableStateFlow("")
@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val homeUiState: StateFlow<HomeUiState> =
         query.flatMapLatest { q ->
-            val src = if (q.isEmpty()) getAllNotes() else getNotesByTitle(q)
+            val src = if (q.isEmpty()) getAllNotes() else searchNote(q)
             src
         }
         .map { list ->
@@ -68,5 +68,5 @@ data class HomeLocalState(
 data class NoteState(
     val id: Long = 0,
     val title: String = "Unnamed",
-    val body: String = "Some text"
+    val body: String = "Some text",
 )

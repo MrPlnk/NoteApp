@@ -47,6 +47,8 @@ class NoteDetailsViewModel @Inject constructor(
                 } else{
                     NoteDetailsUIState.Success(
                         noteId = note.id,
+                        updatedAt = note.updatedAt,
+                        createdAt = note.createdAt,
                         form = note.toNoteForm(),
                         isSaving = false
                     )
@@ -71,7 +73,7 @@ class NoteDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             val s = uiState as? NoteDetailsUIState.Success ?: return@launch
             try {
-                deleteNote.invoke(s.noteId, s.form.title, s.form.body)
+                deleteNote.invoke(s.noteId)
                 uiState = NoteDetailsUIState.Loading
             }
             catch (t: Throwable){
@@ -110,6 +112,8 @@ sealed interface NoteDetailsUIState{
     data class Error(val message: String) : NoteDetailsUIState
     data class Success(
         val noteId: Long,
+        val updatedAt: Long,
+        val createdAt: Long,
         val form: NoteForm,
         val isSaving: Boolean = false
     ) : NoteDetailsUIState

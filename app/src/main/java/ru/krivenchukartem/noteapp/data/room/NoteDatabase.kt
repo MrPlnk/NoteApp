@@ -7,7 +7,7 @@ import ru.krivenchukartem.noteapp.data.room.entity.NoteItem
 
 @Database(
     entities = [NoteItem::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 
