@@ -12,19 +12,26 @@ import javax.inject.Inject
 class LocalNoteRepo @Inject constructor(
     private val noteDao: NoteDao
 ): NoteRepo {
-    override suspend fun saveNote(title: String, body: String): Long {
+    override suspend fun saveNote(title: String, body: String, isPinned: Boolean): Long {
         val note = Note(
             title = title,
             body = body,
             createdAt = System.currentTimeMillis(),
-            updatedAt = System.currentTimeMillis()
+            updatedAt = System.currentTimeMillis(),
+            isPinned = isPinned,
         )
         return noteDao.insertNote(note.toEntity())
     }
 
-    override suspend fun updateNote(id: Long, title: String, body: String): Int {
+    override suspend fun updateNote(id: Long, title: String, body: String, isPinned: Boolean): Int {
         val updatedAt = System.currentTimeMillis()
-        return noteDao.updateNote(id, title, body, updatedAt)
+        return noteDao.updateNote(
+            id = id,
+            title = title,
+            body = body,
+            isPinned = isPinned,
+            updatedAt = updatedAt
+        )
     }
 
     override suspend fun deleteNote(id: Long) {

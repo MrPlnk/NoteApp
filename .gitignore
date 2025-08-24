@@ -60,3 +60,4 @@ reports/
 
 # NDK
 obj/
+/app/src/main/java/ru/krivenchukartem/noteapp.zip

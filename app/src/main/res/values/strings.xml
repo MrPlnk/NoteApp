@@ -6,6 +6,8 @@
     <string name="button_add">Добавить</string>
     <string name="button_save">Сохранить</string>
     <string name="button_share_note">Поделиться заметкой</string>
+    <string name="button_pin">Закрепить заметку</string>
+    <string name="button_unpin">Открепить заметку</string>
 
     <string name="label_its_empty">Тут пока пусто…</string>
     <string name="label_text">Текст</string>
@@ -13,6 +15,8 @@
     <string name="label_share_note">Поделиться заметкой</string>
     <string name="label_last_update">Последнее обновление:</string>
     <string name="label_wait">Пожалуйста, подождите…</string>
+    <string name="label_pinned_notes">Закрепленные</string>
+    <string name="label_unpinned_notes">Другие</string>
 
     <string name="empty_note">Пустая заметка</string>
 </resources>

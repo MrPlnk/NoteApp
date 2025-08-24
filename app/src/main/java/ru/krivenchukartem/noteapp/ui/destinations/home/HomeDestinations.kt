@@ -1,5 +1,7 @@
 package ru.krivenchukartem.noteapp.ui.destinations.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -14,6 +16,7 @@ object HomeScreenDestination
 @Serializable
 data class NoteDetailsScreenDestination(val noteId: Long)
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.homeDestination(
     navigateBack: () -> Unit,
     navigateToNoteDetails: (Long) -> Unit,
@@ -38,6 +41,7 @@ fun NavGraphBuilder.homeScreenDestination(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.noteDetailDestination(
     navigateBack: () -> Unit,
 ){

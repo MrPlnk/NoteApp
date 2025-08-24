@@ -8,5 +8,6 @@ fun Note.toEntity(): NoteItem = NoteItem(
     title = title,
     body = body,
     createdAt = createdAt,
-    updatedAt = updatedAt
+    updatedAt = updatedAt,
+    isPinned = isPinned
 )

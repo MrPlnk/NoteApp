@@ -34,8 +34,9 @@ class HomeViewModel @Inject constructor(
             HomeUiState.Success(
                 HomeLocalState(
                     notes = list.map {
-                        NoteState(it.id, it.title, it.body)
-                    }
+                        NoteState(it.id, it.title, it.body, it.isPinned)
+                    },
+                    firstUnpinnedIndex = list.indexOfFirst{ !it.isPinned }
                 )
             ) as HomeUiState
         }
@@ -62,11 +63,13 @@ sealed interface HomeUiState{
 }
 
 data class HomeLocalState(
-    val notes: List<NoteState> = listOf()
+    val notes: List<NoteState> = listOf(),
+    val firstUnpinnedIndex: Int = 0
 )
 
 data class NoteState(
     val id: Long = 0,
     val title: String = "Unnamed",
     val body: String = "Some text",
+    val isPinned: Boolean = false
 )

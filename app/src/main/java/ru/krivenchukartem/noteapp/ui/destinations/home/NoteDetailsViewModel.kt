@@ -19,7 +19,6 @@ import javax.inject.Inject
 import ru.krivenchukartem.noteapp.domain.model.Note
 import ru.krivenchukartem.noteapp.domain.useCase.DeleteNoteUseCase
 import ru.krivenchukartem.noteapp.domain.useCase.SaveNoteUseCase
-import ru.krivenchukartem.noteapp.domain.useCase.UpdateNoteUseCase
 import ru.krivenchukartem.noteapp.domain.useCase.UpsertNoteUseCase
 import java.time.Instant
 import java.time.ZoneId
@@ -100,7 +99,12 @@ class NoteDetailsViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     if (!s.form.title.isBlank() || !s.form.body.isBlank()) {
-                        upsertNote.invoke(s.noteId, s.form.title, s.form.body)
+                        upsertNote.invoke(
+                            id = s.noteId,
+                            title = s.form.title,
+                            body = s.form.body,
+                            isPinned = s.form.isPinned
+                        )
                         uiState = s.copy(isSaving = true)
                     }
                 } catch (t: Throwable) {
@@ -136,6 +140,14 @@ class NoteDetailsViewModel @Inject constructor(
         val formatted = time.format(formatter)
         return "$defaultText $formatted"
     }
+
+    fun changePinState(){
+        val s = uiState as? NoteDetailsUIState.Success ?: return
+        uiState = s.copy(
+            form = s.form.copy(isPinned = !s.form.isPinned),
+            isSaving = false
+        )
+    }
 }
 
 sealed interface NoteDetailsUIState{
@@ -153,9 +165,11 @@ sealed interface NoteDetailsUIState{
 data class NoteForm(
     val title: String,
     val body: String,
+    val isPinned: Boolean
 )
 
 private fun Note.toNoteForm(): NoteForm = NoteForm(
     title = title,
-    body = body
+    body = body,
+    isPinned = isPinned
 )

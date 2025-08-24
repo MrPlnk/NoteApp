@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.twotone.Star
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -75,6 +76,7 @@ fun NoteDetailsScreen(
 ) {
     val uiState = viewModel.uiState
     val context = LocalContext.current
+    val s = uiState as? NoteDetailsUIState.Success
 
     Scaffold(
         modifier = modifier,
@@ -85,13 +87,24 @@ fun NoteDetailsScreen(
                 navigateBack = {
                     viewModel.saveNote()
                     navigateBack()
+                },
+                actionsButtons = {
+                    if (s != null) {
+                        IconButton(onClick = { viewModel.changePinState() }) {
+                            Icon(
+                                imageVector = if (s.form.isPinned) Icons.Default.Star else Icons.TwoTone.Star,
+                                contentDescription = if (s.form.isPinned) stringResource(R.string.button_pin)
+                                                        else stringResource(R.string.button_unpin)
+                            )
+                        }
+                    }
                 }
             )
         },
         bottomBar = {
             BottomAppBar(
                 actions = {
-                    val s = uiState as? NoteDetailsUIState.Success
+
                     IconButton(onClick = {
                         viewModel.deleteNote()
                         navigateBack()

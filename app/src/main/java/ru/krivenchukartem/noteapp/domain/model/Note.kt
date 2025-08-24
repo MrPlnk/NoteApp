@@ -6,4 +6,5 @@ data class Note(
     val body: String,
     val createdAt: Long,
     val updatedAt: Long,
+    val isPinned: Boolean
 )

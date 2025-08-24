@@ -8,5 +8,6 @@ fun NoteItem.toModel(): Note = Note(
     title = title,
     body = body,
     createdAt = createdAt,
-    updatedAt = updatedAt
+    updatedAt = updatedAt,
+    isPinned = isPinned
 )

@@ -55,7 +55,6 @@ fun HomeScreen(
     val queryUiState by viewModel.query.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-    val cs = MaterialTheme.colorScheme
 
     Scaffold(
         modifier = modifier
@@ -111,7 +110,7 @@ fun HomeScreen(
                     .fillMaxWidth()
             )
             is HomeUiState.Error -> ErrorMessage(state.message)
-            HomeUiState.Loading -> {}
+            HomeUiState.Loading -> Text(stringResource(R.string.label_wait))
         }
     }
 }
@@ -133,11 +132,59 @@ fun HomeBody(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
             ) {
-                items(homeLocalState.notes.size){ idx->
-                    NoteWidget(
-                        homeLocalState.notes[idx],
-                        navigateToNoteDetails = navigateToNoteDetails,
-                    )
+                val firstUnpinnedIndex = homeLocalState.firstUnpinnedIndex
+
+                if (firstUnpinnedIndex == -1){
+                    item {
+                        Text(
+                            text = stringResource(R.string.label_pinned_notes)
+                        )
+                    }
+                    items(homeLocalState.notes.size){ idx->
+                        val note = homeLocalState.notes[idx]
+
+                        NoteWidget(
+                            note,
+                            navigateToNoteDetails = navigateToNoteDetails,
+                        )
+                    }
+
+                }
+                else if (firstUnpinnedIndex == 0){
+                    items(homeLocalState.notes.size){ idx->
+                        val note = homeLocalState.notes[idx]
+                        NoteWidget(
+                            note,
+                            navigateToNoteDetails = navigateToNoteDetails,
+                        )
+                    }
+                }
+                else{
+                    item {
+                        Text(
+                            text = stringResource(R.string.label_pinned_notes)
+                        )
+                    }
+                    items(firstUnpinnedIndex) { idx ->
+                    val note = homeLocalState.notes[idx]
+                        NoteWidget(
+                            note,
+                            navigateToNoteDetails = navigateToNoteDetails,
+                        )
+                    }
+                    item {
+                        Text(
+                            text = stringResource(R.string.label_unpinned_notes)
+                        )
+                    }
+                    items(homeLocalState.notes.size - firstUnpinnedIndex){ unmovedIdx ->
+                        val idx = unmovedIdx + firstUnpinnedIndex
+                        val note = homeLocalState.notes[idx]
+                        NoteWidget(
+                            note,
+                            navigateToNoteDetails = navigateToNoteDetails,
+                        )
+                    }
                 }
             }
         }
