@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(indices = [Index("createdAt")])
+@Entity(tableName = "notes", indices = [Index("createdAt")])
 data class NoteItem(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

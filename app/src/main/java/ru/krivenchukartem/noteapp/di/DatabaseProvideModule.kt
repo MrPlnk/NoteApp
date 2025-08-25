@@ -8,7 +8,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.krivenchukartem.noteapp.data.room.NoteDatabase
+import ru.krivenchukartem.noteapp.data.room.dao.AttachmentDao
 import ru.krivenchukartem.noteapp.data.room.dao.NoteDao
+import ru.krivenchukartem.noteapp.data.room.dao.NoteFullDao
+import ru.krivenchukartem.noteapp.data.room.dao.NoteTagCrossRefDao
+import ru.krivenchukartem.noteapp.data.room.dao.TagDao
 import javax.inject.Singleton
 
 @Module
@@ -29,4 +33,24 @@ class DatabaseProvideModule {
     fun provideNoteDao(
         noteDatabase: NoteDatabase
     ): NoteDao = noteDatabase.itemDao()
+
+    @Provides
+    fun provideAttachmentDao(
+        noteDatabase: NoteDatabase
+    ): AttachmentDao = noteDatabase.attachmentDao()
+
+    @Provides
+    fun provideNoteFullDao(
+        noteDatabase: NoteDatabase
+    ): NoteFullDao = noteDatabase.noteFullDao()
+
+    @Provides
+    fun provideNoteTagCrossRefDao(
+        noteDatabase: NoteDatabase
+    ): NoteTagCrossRefDao = noteDatabase.noteTagCrossRefDao()
+
+    @Provides
+    fun provideTagDao(
+        noteDatabase: NoteDatabase
+    ): TagDao = noteDatabase.tagDao()
 }

@@ -15,28 +15,13 @@ interface NoteDao {
     suspend fun insertNote(noteItem: NoteItem): Long
 
     @Query("""
-        UPDATE NoteItem
+        UPDATE notes
         SET title=:title, body=:body, updatedAt=:updatedAt, isPinned=:isPinned
         WHERE id=:id
     """)
     suspend fun updateNote(id: Long, title: String, body: String, updatedAt: Long, isPinned: Boolean): Int
 
-    @Query("DELETE FROM NoteItem WHERE id=:id")
+    @Query("DELETE FROM notes WHERE id=:id")
     suspend fun deleteNote(id: Long)
 
-    @Query("SELECT * FROM NoteItem WHERE id = :reqId")
-    suspend fun getNoteById(reqId: Long): NoteItem?
-
-    @Query("""
-        SELECT * FROM NoteItem
-        ORDER BY isPinned DESC, createdAt DESC
-        """)
-    fun getAllNotes(): Flow<List<NoteItem>>
-
-    @Query("""
-        SELECT * FROM NoteItem WHERE
-        title LIKE '%' || :query || '%' OR body LIKE '%' || :query || '%'
-        ORDER BY isPinned DESC, createdAt DESC
-        """)
-    fun search(query: String): Flow<List<NoteItem>>
 }
