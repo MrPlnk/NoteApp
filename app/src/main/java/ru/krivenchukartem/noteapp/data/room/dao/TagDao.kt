@@ -16,11 +16,11 @@ interface TagDao {
         SELECT * FROM tags
         ORDER BY name
         """)
-    fun getAllTags(): Flow<TagItem>
+    fun getAllTags(): Flow<List<TagItem>>
 
     @Query("""
         SELECT * FROM tags
         WHERE name = :name LIMIT 1
         """)
-    suspend fun findByName(name: String): TagItem?
+    fun getTagByName(name: String): Flow<TagItem?>
 }

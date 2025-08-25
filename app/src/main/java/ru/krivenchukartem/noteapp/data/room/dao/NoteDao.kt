@@ -1,11 +1,9 @@
 package ru.krivenchukartem.noteapp.data.room.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import ru.krivenchukartem.noteapp.data.room.entity.NoteItem
 
@@ -24,4 +22,16 @@ interface NoteDao {
     @Query("DELETE FROM notes WHERE id=:id")
     suspend fun deleteNote(id: Long)
 
+    @Query("""
+        SELECT * FROM notes
+        ORDER BY isPinned DESC, createdAt DESC
+    """)
+    fun getAllNotes(): Flow<List<NoteItem>>
+
+    @Query("""
+        SELECT * FROM notes
+        WHERE id = :id
+        ORDER BY isPinned DESC, createdAt DESC
+    """)
+    fun getNoteById(id: Long): Flow<NoteItem?>
 }

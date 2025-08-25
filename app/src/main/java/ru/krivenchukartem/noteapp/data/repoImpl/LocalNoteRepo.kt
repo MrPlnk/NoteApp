@@ -38,8 +38,9 @@ class LocalNoteRepo @Inject constructor(
         noteDao.deleteNote(id)
     }
 
-    override suspend fun getNoteById(id: Long): Note? {
-        return noteDao.getNoteById(id)?.toModel()
+    override suspend fun getNoteById(id: Long): Flow<Note?> {
+        return noteDao.getNoteById(id)
+            .map{ it?.toModel() }
     }
 
     override fun getAllNotes(): Flow<List<Note>> {
@@ -50,14 +51,4 @@ class LocalNoteRepo @Inject constructor(
                 }
             }
     }
-
-    override fun searchNote(query: String): Flow<List<Note>> {
-        return noteDao.search(query)
-            .map{ list ->
-                list.map{
-                    it.toModel()
-                }
-            }
-    }
-
 }

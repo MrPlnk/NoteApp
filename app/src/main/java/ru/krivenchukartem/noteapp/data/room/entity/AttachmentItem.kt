@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
         ForeignKey(NoteItem::class, parentColumns = ["id"], childColumns = ["noteId"], onDelete = ForeignKey.CASCADE)
     ]
 )
-data class Attachment(
+data class AttachmentItem(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val noteId: Long,

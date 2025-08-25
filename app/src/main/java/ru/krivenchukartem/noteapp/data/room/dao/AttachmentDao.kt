@@ -4,12 +4,12 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import ru.krivenchukartem.noteapp.data.room.entity.Attachment
+import ru.krivenchukartem.noteapp.data.room.entity.AttachmentItem
 
 @Dao
 interface AttachmentDao {
     @Insert
-    suspend fun insertAttachment(attachment: Attachment): Long
+    suspend fun insertAttachment(attachmentItem: AttachmentItem): Long
 
     @Query("""
         DELETE FROM attachments
@@ -21,5 +21,5 @@ interface AttachmentDao {
         SELECT * FROM attachments
         WHERE noteId = :noteId ORDER BY id DESC
     """)
-    fun attachmentsByNote(noteId: Long): Flow<List<Attachment>>
+    fun getAttachmentsByNote(noteId: Long): Flow<List<AttachmentItem>>
 }

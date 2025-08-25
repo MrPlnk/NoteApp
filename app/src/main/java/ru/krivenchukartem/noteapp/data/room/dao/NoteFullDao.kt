@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import ru.krivenchukartem.noteapp.data.room.entity.NoteFullItem
-import ru.krivenchukartem.noteapp.data.room.entity.NoteItem
 
 @Dao
 interface NoteFullDao {
@@ -15,7 +14,7 @@ interface NoteFullDao {
         SELECT * FROM notes
         ORDER BY isPinned DESC, createdAt DESC
         """)
-    fun getAllNotes(): Flow<List<NoteFullItem>>
+    fun getAllNotesFull(): Flow<List<NoteFullItem>>
 
     @Query("""
         SELECT n.* FROM notes n
@@ -32,5 +31,5 @@ interface NoteFullDao {
         ) 
         ORDER BY isPinned DESC, createdAt DESC
         """)
-    fun filterNotesFull(selectedTagNames: List<String>, query: String): Flow<List<NoteItem>>
+    fun filterNotesFull(selectedTagNames: List<String>, query: String): Flow<List<NoteFullItem>>
 }
