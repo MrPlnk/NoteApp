@@ -13,9 +13,6 @@ import ru.krivenchukartem.noteapp.ui.navigation.Home
 @Serializable
 object HomeScreenDestination
 
-@Serializable
-data class NoteDetailsScreenDestination(val noteId: Long)
-
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.homeDestination(
     navigateBack: () -> Unit,
@@ -24,9 +21,6 @@ fun NavGraphBuilder.homeDestination(
     navigation<Home>(startDestination = HomeScreenDestination){
         homeScreenDestination(
             navigateToNoteDetails = navigateToNoteDetails
-        )
-        noteDetailDestination(
-            navigateBack = navigateBack
         )
     }
 }
@@ -39,24 +33,4 @@ fun NavGraphBuilder.homeScreenDestination(
             navigateToNoteDetails = navigateToNoteDetails
         )
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun NavGraphBuilder.noteDetailDestination(
-    navigateBack: () -> Unit,
-){
-    composable<NoteDetailsScreenDestination>{ backStack ->
-        NoteDetailsScreen(
-            viewModel = hiltViewModel(backStack),
-            navigateBack = navigateBack
-        )
-    }
-}
-
-fun NavController.navigateToHomeScreen(){
-    navigate(route = HomeScreenDestination)
-}
-
-fun NavController.navigateToNoteDetailsScreen(id: Long){
-    navigate(route = NoteDetailsScreenDestination(noteId = id))
 }

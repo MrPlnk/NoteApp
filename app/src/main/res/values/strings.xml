@@ -8,6 +8,7 @@
     <string name="button_share_note">Поделиться заметкой</string>
     <string name="button_pin">Закрепить заметку</string>
     <string name="button_unpin">Открепить заметку</string>
+    <string name="button_add_attachment">Добавить картинку</string>
 
     <string name="label_its_empty">Тут пока пусто…</string>
     <string name="label_text">Текст</string>
