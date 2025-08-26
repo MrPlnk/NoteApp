@@ -1,6 +1,5 @@
 package ru.krivenchukartem.noteapp.ui.destinations.note
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -180,7 +179,7 @@ class NoteDetailsViewModel @Inject constructor(
                         .filterNot { it.id == id }
                 )
             )
-            
+
             saveNote()
         }
     }

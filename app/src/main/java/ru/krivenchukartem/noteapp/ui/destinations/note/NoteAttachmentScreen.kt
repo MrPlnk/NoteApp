@@ -8,12 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,8 +28,6 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import ru.krivenchukartem.noteapp.R
-import ru.krivenchukartem.noteapp.domain.model.Attachment
-import ru.krivenchukartem.noteapp.ui.composable.ErrorMessage
 import ru.krivenchukartem.noteapp.ui.composable.ErrorScreen
 import ru.krivenchukartem.noteapp.ui.composable.NoteTopAppBar
 import ru.krivenchukartem.noteapp.ui.form.AttachmentForm
@@ -52,7 +47,6 @@ fun NoteAttachmentScreen(
             navigateBack = navigateBack,
             updateIdx = viewModel::indexUpdate,
             localState = uiState.localState,
-            deleteAttachment = viewModel::delAttachment
         )
     }
 }
@@ -62,7 +56,6 @@ fun NoteAttachmentScreen(
 fun NoteAttachmentScaffold(
     navigateBack: () -> Unit,
     updateIdx: (Int) -> Unit,
-    deleteAttachment: (Long) -> Unit,
     localState: LocalUiState,
     modifier: Modifier = Modifier,
 ){
@@ -131,7 +124,7 @@ fun NoteAttachmentBody(
                         .crossfade(true)
                         .build(),
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                     loading = {
                         CircularProgressIndicator(
                             modifier = Modifier
@@ -147,7 +140,7 @@ fun NoteAttachmentBody(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.broken_image_24px),
-                                contentDescription = "Недоступно",
+                                contentDescription = stringResource(R.string.label_not_available),
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         }

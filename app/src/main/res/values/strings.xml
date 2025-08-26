@@ -21,6 +21,8 @@
     <string name="label_unpinned_notes">Другие</string>
     <string name="label_of">из</string>
     <string name="label_error">Ошибка</string>
+    <string name="label_not_available">Недоступно</string>
+    <string name="label_available_after_save">Доступно после сохранения</string>
 
     <string name="empty_note">Пустая заметка</string>
 </resources>

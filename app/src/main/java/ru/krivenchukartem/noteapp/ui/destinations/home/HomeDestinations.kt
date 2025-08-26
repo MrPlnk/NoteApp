@@ -2,8 +2,6 @@ package ru.krivenchukartem.noteapp.ui.destinations.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation

@@ -1,6 +1,5 @@
 package ru.krivenchukartem.noteapp.domain.useCase
 
-import ru.krivenchukartem.noteapp.domain.model.Note
 import ru.krivenchukartem.noteapp.domain.repo.NoteRepo
 import javax.inject.Inject
 

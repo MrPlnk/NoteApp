@@ -1,10 +1,8 @@
 package ru.krivenchukartem.noteapp.ui.destinations.note
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -73,17 +71,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import ru.krivenchukartem.noteapp.R
-import ru.krivenchukartem.noteapp.domain.model.Attachment
 import ru.krivenchukartem.noteapp.ui.composable.ErrorMessage
 import ru.krivenchukartem.noteapp.ui.composable.NoteTopAppBar
 import ru.krivenchukartem.noteapp.ui.form.AttachmentForm
-import java.io.FileNotFoundException
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -114,8 +108,8 @@ fun NoteDetailsScreen(
                         IconButton(onClick = { viewModel.changePinState() }) {
                             Icon(
                                 imageVector = if (s.noteFullForm.noteForm.isPinned) Icons.Default.Star else Icons.TwoTone.Star,
-                                contentDescription = if (s.noteFullForm.noteForm.isPinned) stringResource(R.string.button_pin)
-                                                        else stringResource(R.string.button_unpin)
+                                contentDescription = if (s.noteFullForm.noteForm.isPinned) stringResource(R.string.button_unpin)
+                                                        else stringResource(R.string.button_pin)
                             )
                         }
                         InsertAttachmentsButton(
@@ -133,7 +127,7 @@ fun NoteDetailsScreen(
                         viewModel.deleteNote()
                         navigateBack()
                     }) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "")
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.button_delete))
                     }
                     IconButton(onClick = {
                         if (s != null) {
@@ -244,7 +238,6 @@ fun AttachmentsList(
         contentPadding = PaddingValues(horizontal = 12.dp)
     ) {
         items(attachments.size) { idx ->
-            val att = attachments[idx]
             Box(
                 modifier = Modifier
                     .size(96.dp)
@@ -278,14 +271,14 @@ fun AttachmentsList(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.broken_image_24px),
-                                contentDescription = "Недоступно",
+                                contentDescription = stringResource(R.string.label_not_available),
                                 modifier = Modifier.align(Alignment.Center)
                             )
                             IconButton(
                                 onClick = { onDeleteAttachment(attachments[idx].id) },
                                 modifier = Modifier.align(Alignment.TopEnd)
                             ) {
-                                Icon(Icons.Default.Delete, contentDescription = "Удалить")
+                                Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.button_delete))
                             }
                         }
                     },
@@ -299,7 +292,7 @@ fun AttachmentsList(
                     )
                     Icon(
                         imageVector = Icons.Default.Lock,
-                        contentDescription = "Вложение доступно после сохранения",
+                        contentDescription = stringResource(R.string.label_available_after_save),
                         tint = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -435,7 +428,6 @@ fun InsertAttachmentsButton(
         ActivityResultContracts.PickMultipleVisualMedia(maxItems)
     ) { uris ->
         if (uris.isNotEmpty()) {
-            // Сохраняем права доступа для всех URI
             uris.forEach { uri ->
                 try {
                     context.contentResolver.takePersistableUriPermission(
@@ -443,7 +435,6 @@ fun InsertAttachmentsButton(
                         Intent.FLAG_GRANT_READ_URI_PERMISSION
                     )
                 } catch (e: Exception) {
-                    // Логируем ошибку, но продолжаем обработку
                 }
             }
             onPicked(uris)
@@ -460,7 +451,6 @@ fun InsertAttachmentsButton(
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
             } catch (e: Exception) {
-                // Обработка ошибок
             }
             onPicked(listOf(it))
         }

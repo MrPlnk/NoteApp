@@ -1,10 +1,8 @@
 package ru.krivenchukartem.noteapp.domain.useCase
 
 import kotlinx.coroutines.flow.first
-import ru.krivenchukartem.noteapp.domain.model.Note
 import ru.krivenchukartem.noteapp.domain.model.NoteFull
 import ru.krivenchukartem.noteapp.domain.repo.NoteQueryRepo
-import ru.krivenchukartem.noteapp.domain.repo.NoteRepo
 import javax.inject.Inject
 
 class GetNoteByIdUseCaseSnapshot @Inject constructor(

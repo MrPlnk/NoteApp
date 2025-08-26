@@ -20,7 +20,7 @@ import ru.krivenchukartem.noteapp.data.room.entity.TagItem
         TagItem::class
        ],
     version = 4,
-    exportSchema = true
+    exportSchema = false
 )
 
 abstract class NoteDatabase: RoomDatabase() {

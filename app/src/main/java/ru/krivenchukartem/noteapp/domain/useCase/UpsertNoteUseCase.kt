@@ -2,9 +2,6 @@ package ru.krivenchukartem.noteapp.domain.useCase
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import ru.krivenchukartem.noteapp.data.repoImpl.LocalAttachmentRepo
-import ru.krivenchukartem.noteapp.data.repoImpl.LocalNoteRepo
-import ru.krivenchukartem.noteapp.domain.model.Note
 import ru.krivenchukartem.noteapp.domain.model.NoteFull
 import ru.krivenchukartem.noteapp.domain.model.NoteTagCrossRef
 import ru.krivenchukartem.noteapp.domain.repo.AttachmentRepo

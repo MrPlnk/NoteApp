@@ -1,9 +1,6 @@
 package ru.krivenchukartem.noteapp.domain.repo
 
-import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
-import ru.krivenchukartem.noteapp.data.room.entity.NoteFullItem
-import ru.krivenchukartem.noteapp.data.room.entity.NoteItem
 import ru.krivenchukartem.noteapp.domain.model.NoteFull
 
 interface NoteQueryRepo {
