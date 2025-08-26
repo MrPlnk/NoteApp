@@ -23,7 +23,7 @@ class LocalTagRepo @Inject constructor(
             .map { list -> list.map { it.toModel() } }
     }
 
-    override suspend fun getTagByName(name: String): Flow<Tag?> {
+    override fun getTagByName(name: String): Flow<Tag?> {
         return tagDao.getTagByName(name)
             .map { it?.toModel() }
     }

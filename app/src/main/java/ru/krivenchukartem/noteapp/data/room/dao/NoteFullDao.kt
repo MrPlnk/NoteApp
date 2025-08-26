@@ -22,7 +22,9 @@ interface NoteFullDao {
     @Transaction
     @Query("""
         SELECT n.* FROM notes n
-        WHERE :query IS NULL OR :query = '' OR n.title LIKE '%' || :query || '%' OR n.body LIKE '%' || :query || '%'
+        WHERE(
+            :query IS NULL OR :query = '' OR n.title LIKE '%' || :query || '%' OR n.body LIKE '%' || :query || '%'
+        )
         AND NOT EXISTS(
             SELECT 1
             FROM (

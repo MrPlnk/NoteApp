@@ -7,6 +7,6 @@ interface NoteRepo {
     suspend fun saveNote(title: String, body: String, isPinned: Boolean): Long
     suspend fun updateNote(id: Long, title: String, body: String, isPinned: Boolean): Int
     suspend fun deleteNote(id: Long)
-    suspend fun getNoteById(id: Long): Flow<Note?>
+    fun getNoteById(id: Long): Flow<Note?>
     fun getAllNotes(): Flow<List<Note>>
 }

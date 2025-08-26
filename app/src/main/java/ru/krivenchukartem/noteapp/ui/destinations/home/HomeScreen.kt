@@ -80,6 +80,10 @@ fun HomeScreen(
                                 Text("Искать в заметках")
                             }
                         },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                        )
                     )
                 },
                 navigationIcon = {},

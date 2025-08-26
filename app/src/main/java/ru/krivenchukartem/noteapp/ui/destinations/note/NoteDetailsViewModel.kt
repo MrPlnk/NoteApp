@@ -1,6 +1,8 @@
-package ru.krivenchukartem.noteapp.ui.destinations.home
+package ru.krivenchukartem.noteapp.ui.destinations.note
 
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
@@ -11,10 +13,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import ru.krivenchukartem.noteapp.domain.useCase.DeleteAttachmentByIdUseCase
 import ru.krivenchukartem.noteapp.domain.useCase.GetNoteByIdUseCaseSnapshot
 import javax.inject.Inject
 import ru.krivenchukartem.noteapp.domain.useCase.DeleteNoteUseCase
 import ru.krivenchukartem.noteapp.domain.useCase.UpsertNoteUseCase
+import ru.krivenchukartem.noteapp.ui.form.AttachmentForm
 import ru.krivenchukartem.noteapp.ui.form.NoteFullForm
 import ru.krivenchukartem.noteapp.ui.mapper.toForm
 import ru.krivenchukartem.noteapp.ui.mapper.toModel
@@ -27,7 +31,8 @@ class NoteDetailsViewModel @Inject constructor(
     private val getNoteById: GetNoteByIdUseCaseSnapshot,
     private val upsertNote: UpsertNoteUseCase,
     private val deleteNote: DeleteNoteUseCase,
-    savedStateHandle: SavedStateHandle
+    private val deleteAttachment: DeleteAttachmentByIdUseCase,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     var uiState by mutableStateOf<NoteDetailsUIState>(NoteDetailsUIState.Loading)
@@ -149,6 +154,35 @@ class NoteDetailsViewModel @Inject constructor(
             ),
             isSaving = false
         )
+    }
+
+    fun addAttachment(uris: List<Uri>){
+        val s = uiState as? NoteDetailsUIState.Success ?: return
+        uiState = s.copy(
+            noteFullForm = s.noteFullForm.copy(
+                attachmentsForm = s.noteFullForm.attachmentsForm + uris.map { uri ->
+                    AttachmentForm(uri = uri.toString())
+                },
+            ),
+            isSaving = false
+        )
+        saveNote()
+    }
+
+    fun delAttachment(id: Long) {
+        viewModelScope.launch {
+            val s = uiState as? NoteDetailsUIState.Success ?: return@launch
+            deleteAttachment(id)
+
+            uiState = s.copy(
+                noteFullForm = s.noteFullForm.copy(
+                    attachmentsForm = s.noteFullForm.attachmentsForm
+                        .filterNot { it.id == id }
+                )
+            )
+            
+            saveNote()
+        }
     }
 }
 

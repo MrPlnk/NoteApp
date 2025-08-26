@@ -19,9 +19,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepoBindModule {
-    @Binds abstract fun bindNoteRepo(impl: LocalNoteRepo): NoteRepo
-    @Binds abstract fun bindTagRepo(impl: LocalTagRepo): TagRepo
-    @Binds abstract fun bindAttachRepo(impl: LocalAttachmentRepo): AttachmentRepo
-    @Binds abstract fun bindNoteTagRepo(impl: LocalNoteTagCrossRefRepo): NoteTagCrossRefRepo
-    @Binds abstract fun bindNoteQueryRepo(impl: LocalNoteQueryRepo): NoteQueryRepo
+    @Singleton @Binds abstract fun bindNoteRepo(impl: LocalNoteRepo): NoteRepo
+    @Singleton @Binds abstract fun bindTagRepo(impl: LocalTagRepo): TagRepo
+    @Singleton @Binds abstract fun bindAttachRepo(impl: LocalAttachmentRepo): AttachmentRepo
+    @Singleton @Binds abstract fun bindNoteTagRepo(impl: LocalNoteTagCrossRefRepo): NoteTagCrossRefRepo
+    @Singleton @Binds abstract fun bindNoteQueryRepo(impl: LocalNoteQueryRepo): NoteQueryRepo
 }

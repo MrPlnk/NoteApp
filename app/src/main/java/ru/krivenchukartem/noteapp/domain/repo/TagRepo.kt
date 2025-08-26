@@ -6,5 +6,5 @@ import ru.krivenchukartem.noteapp.domain.model.Tag
 interface TagRepo {
     suspend fun insertTag(tag: Tag): Long
     fun getAllTags(): Flow<List<Tag>>
-    suspend fun getTagByName(name: String): Flow<Tag?>
+    fun getTagByName(name: String): Flow<Tag?>
 }

@@ -12,6 +12,7 @@ import ru.krivenchukartem.noteapp.ui.destinations.home.HomeScreenDestination
 import ru.krivenchukartem.noteapp.ui.destinations.home.homeDestination
 import ru.krivenchukartem.noteapp.ui.destinations.note.noteDestination
 import ru.krivenchukartem.noteapp.ui.destinations.note.NoteDetailsDestination
+import ru.krivenchukartem.noteapp.ui.destinations.note.navigateToNoteAttachmentScreen
 
 @Serializable
 object Home
@@ -34,6 +35,7 @@ fun NoteNavGraph(
         )
         noteDestination(
             navigateBack = navHostController::popBackStack,
+            navigateToNoteAttachmentScreen = navHostController::navigateToNoteAttachmentScreen
         )
     }
 }
