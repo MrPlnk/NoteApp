@@ -92,8 +92,8 @@ fun NoteDetailsScreen(
                     if (s != null) {
                         IconButton(onClick = { viewModel.changePinState() }) {
                             Icon(
-                                imageVector = if (s.form.isPinned) Icons.Default.Star else Icons.TwoTone.Star,
-                                contentDescription = if (s.form.isPinned) stringResource(R.string.button_pin)
+                                imageVector = if (s.noteFullForm.noteForm.isPinned) Icons.Default.Star else Icons.TwoTone.Star,
+                                contentDescription = if (s.noteFullForm.noteForm.isPinned) stringResource(R.string.button_pin)
                                                         else stringResource(R.string.button_unpin)
                             )
                         }
@@ -173,7 +173,7 @@ fun NoteDetailsBody(
     modifier: Modifier = Modifier,
 ){
     val scrollState = rememberScrollState(0)
-    val note = localState.form
+    val note = localState.noteFullForm.noteForm
 
     Column(
         modifier = modifier

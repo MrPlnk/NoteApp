@@ -6,20 +6,18 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.krivenchukartem.noteapp.R
 import ru.krivenchukartem.noteapp.domain.useCase.GetNoteByIdUseCaseSnapshot
 import javax.inject.Inject
-import ru.krivenchukartem.noteapp.domain.model.Note
 import ru.krivenchukartem.noteapp.domain.useCase.DeleteNoteUseCase
-import ru.krivenchukartem.noteapp.domain.useCase.SaveNoteUseCase
 import ru.krivenchukartem.noteapp.domain.useCase.UpsertNoteUseCase
+import ru.krivenchukartem.noteapp.ui.form.NoteFullForm
+import ru.krivenchukartem.noteapp.ui.mapper.toForm
+import ru.krivenchukartem.noteapp.ui.mapper.toModel
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -48,14 +46,13 @@ class NoteDetailsViewModel @Inject constructor(
             uiState = try {
                 val note = getNoteById.invoke(noteId)
                 if (note == null){
-                    NoteDetailsUIState.Error("Заметка не найдена")
+                    NoteDetailsUIState.Success(
+                        noteFullForm = NoteFullForm(),
+                        isSaving = true
+                    )
                 } else{
                     NoteDetailsUIState.Success(
-                        noteId = note.id,
-                        updatedAt = note.updatedAt,
-                        createdAt = note.createdAt,
-                        form = note.toNoteForm(),
-                        isSaving = true
+                        noteFullForm = note.toForm()
                     )
                 }
             } catch (t: Throwable){
@@ -66,16 +63,22 @@ class NoteDetailsViewModel @Inject constructor(
 
     fun changeTitle(newTitle: String) {
         val s = uiState as? NoteDetailsUIState.Success ?: return
+        val note = s.noteFullForm.noteForm
         uiState = s.copy(
-            form = s.form.copy(title = newTitle),
+            s.noteFullForm.copy(
+                noteForm = note.copy(title = newTitle)
+            ),
             isSaving = false
         )
     }
 
     fun changeBody(newBody: String) {
         val s = uiState as? NoteDetailsUIState.Success ?: return
+        val note = s.noteFullForm.noteForm
         uiState = s.copy(
-            form = s.form.copy(body = newBody),
+            s.noteFullForm.copy(
+                noteForm = note.copy(body = newBody)
+            ),
             isSaving = false
         )
     }
@@ -83,8 +86,9 @@ class NoteDetailsViewModel @Inject constructor(
     fun deleteNote(){
         viewModelScope.launch {
             val s = uiState as? NoteDetailsUIState.Success ?: return@launch
+            val note = s.noteFullForm.noteForm
             try {
-                deleteNote.invoke(s.noteId)
+                deleteNote.invoke(note.id)
                 uiState = NoteDetailsUIState.Loading
             }
             catch (t: Throwable){
@@ -96,15 +100,11 @@ class NoteDetailsViewModel @Inject constructor(
     fun saveNote() {
         val s = uiState as? NoteDetailsUIState.Success ?: return
         if (!s.isSaving) {
+            val note = s.noteFullForm.noteForm
             viewModelScope.launch {
                 try {
-                    if (!s.form.title.isBlank() || !s.form.body.isBlank()) {
-                        upsertNote.invoke(
-                            id = s.noteId,
-                            title = s.form.title,
-                            body = s.form.body,
-                            isPinned = s.form.isPinned
-                        )
+                    if (!note.title.isBlank() || !note.body.isBlank()) {
+                        upsertNote.invoke(s.noteFullForm.toModel())
                         uiState = s.copy(isSaving = true)
                     }
                 } catch (t: Throwable) {
@@ -116,7 +116,7 @@ class NoteDetailsViewModel @Inject constructor(
 
     fun buildShareText(defaultText: String = ""): Intent?{
         val s = uiState as? NoteDetailsUIState.Success ?: return null
-        val note = s.form
+        val note = s.noteFullForm.noteForm
         val parts = listOf(note.title, note.body)
             .map { it.trim() }
             .filter { it.isNotEmpty() }
@@ -132,8 +132,8 @@ class NoteDetailsViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun getLastDateUpdate(defaultText: String = ""): String{
         val s = uiState as? NoteDetailsUIState.Success ?: return ""
-        if (s.noteId == 0L) return ""
-        val time = Instant.ofEpochMilli(s.updatedAt)
+        if (s.noteFullForm.noteForm.id == 0L) return ""
+        val time = Instant.ofEpochMilli(s.noteFullForm.noteForm.updatedAt)
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime()
         val formatter = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")
@@ -144,7 +144,9 @@ class NoteDetailsViewModel @Inject constructor(
     fun changePinState(){
         val s = uiState as? NoteDetailsUIState.Success ?: return
         uiState = s.copy(
-            form = s.form.copy(isPinned = !s.form.isPinned),
+            noteFullForm = s.noteFullForm.copy(
+                s.noteFullForm.noteForm.copy(isPinned = !s.noteFullForm.noteForm.isPinned),
+            ),
             isSaving = false
         )
     }
@@ -154,22 +156,7 @@ sealed interface NoteDetailsUIState{
     object Loading : NoteDetailsUIState
     data class Error(val message: String) : NoteDetailsUIState
     data class Success(
-        val noteId: Long,
-        val updatedAt: Long,
-        val createdAt: Long,
-        val form: NoteForm,
+        val noteFullForm: NoteFullForm,
         val isSaving: Boolean = false
     ) : NoteDetailsUIState
 }
-
-data class NoteForm(
-    val title: String,
-    val body: String,
-    val isPinned: Boolean
-)
-
-private fun Note.toNoteForm(): NoteForm = NoteForm(
-    title = title,
-    body = body,
-    isPinned = isPinned
-)

@@ -52,7 +52,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
-    val queryUiState by viewModel.query.collectAsState()
+    val queryUiState by viewModel.searchState.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -67,7 +67,7 @@ fun HomeScreen(
                             .fillMaxWidth()
                             .offset(x = (-8).dp),
                         shape = RoundedCornerShape(100.dp),
-                        value = queryUiState,
+                        value = queryUiState.query,
                         onValueChange = {viewModel.changeQuery(it)},
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences,
@@ -76,7 +76,7 @@ fun HomeScreen(
                         ),
                         singleLine = true,
                         placeholder = {
-                            if (queryUiState.isEmpty()) {
+                            if (queryUiState.query.isEmpty()) {
                                 Text("Искать в заметках")
                             }
                         },

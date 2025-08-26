@@ -29,9 +29,6 @@ fun AttachmentItem.toModel(): Attachment = Attachment(
     id = id,
     noteId = noteId,
     uri = uri,
-    mime = mime,
-    width = width,
-    height = height,
     createdAt = createdAt
 )
 

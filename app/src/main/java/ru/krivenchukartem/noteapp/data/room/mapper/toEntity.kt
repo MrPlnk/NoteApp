@@ -21,9 +21,9 @@ fun Note.toEntity(): NoteItem = NoteItem(
 )
 
 fun NoteFull.toEntity(): NoteFullItem = NoteFullItem(
-    note = note,
-    tags = tags,
-    attachmentItems = attachmentItems
+    note = note.toEntity(),
+    tags = tags.map { it.toEntity() },
+    attachments = attachments.map { it.toEntity() },
 )
 
 fun Tag.toEntity(): TagItem = TagItem(
@@ -35,9 +35,6 @@ fun Attachment.toEntity(): AttachmentItem = AttachmentItem(
     id = id,
     noteId = noteId,
     uri = uri,
-    mime = mime,
-    width = width,
-    height = height,
     createdAt = createdAt
 )
 

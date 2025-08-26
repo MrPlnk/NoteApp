@@ -1,14 +1,20 @@
 package ru.krivenchukartem.noteapp.domain.useCase
 
 import kotlinx.coroutines.flow.Flow
+import ru.krivenchukartem.noteapp.data.repoImpl.LocalNoteQueryRepo
 import ru.krivenchukartem.noteapp.data.repoImpl.LocalNoteRepo
 import ru.krivenchukartem.noteapp.domain.model.Note
+import ru.krivenchukartem.noteapp.domain.model.NoteFull
+import ru.krivenchukartem.noteapp.domain.repo.NoteQueryRepo
 import javax.inject.Inject
 
 class SearchNoteUseCaseStream @Inject constructor(
-    private val noteRepo: LocalNoteRepo
+    private val noteQueryRepo: NoteQueryRepo
 ) {
-    operator fun invoke(searchedText: String): Flow<List<Note>>{
-        return noteRepo.searchNote(searchedText)
+    operator fun invoke(query: String = "", tags: List<String> = listOf()): Flow<List<NoteFull>>{
+        return noteQueryRepo.filterNotesFull(
+            query = query,
+            tags = tags,
+        )
     }
 }

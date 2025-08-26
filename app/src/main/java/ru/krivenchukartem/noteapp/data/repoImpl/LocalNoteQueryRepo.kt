@@ -6,8 +6,9 @@ import ru.krivenchukartem.noteapp.data.room.dao.NoteFullDao
 import ru.krivenchukartem.noteapp.data.room.mapper.toModel
 import ru.krivenchukartem.noteapp.domain.model.NoteFull
 import ru.krivenchukartem.noteapp.domain.repo.NoteQueryRepo
+import javax.inject.Inject
 
-class LocalNoteQueryRepo(
+class LocalNoteQueryRepo @Inject constructor(
     private val noteFullDao: NoteFullDao
 ) : NoteQueryRepo{
     override fun getNoteFullById(reqId: Long): Flow<NoteFull?> {
@@ -19,10 +20,10 @@ class LocalNoteQueryRepo(
     }
 
     override fun filterNotesFull(
-        selectedTagNames: List<String>,
+        tags: List<String>,
         query: String
     ): Flow<List<NoteFull>> {
-        return noteFullDao.filterNotesFull(selectedTagNames, query)
+        return noteFullDao.filterNotesFull(tags, query)
             .map { list -> list.map { it.toModel() } }
     }
 }

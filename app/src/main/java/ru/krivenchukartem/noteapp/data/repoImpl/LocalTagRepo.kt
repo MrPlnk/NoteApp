@@ -8,8 +8,9 @@ import ru.krivenchukartem.noteapp.data.room.mapper.toEntity
 import ru.krivenchukartem.noteapp.data.room.mapper.toModel
 import ru.krivenchukartem.noteapp.domain.model.Tag
 import ru.krivenchukartem.noteapp.domain.repo.TagRepo
+import javax.inject.Inject
 
-class LocalTagRepo(
+class LocalTagRepo @Inject constructor(
     private val tagDao: TagDao
 ): TagRepo {
     override suspend fun insertTag(tag: Tag): Long {

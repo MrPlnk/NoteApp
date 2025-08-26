@@ -5,8 +5,9 @@ import ru.krivenchukartem.noteapp.data.room.dao.NoteTagCrossRefDao
 import ru.krivenchukartem.noteapp.data.room.mapper.toEntity
 import ru.krivenchukartem.noteapp.domain.model.NoteTagCrossRef
 import ru.krivenchukartem.noteapp.domain.repo.NoteTagCrossRefRepo
+import javax.inject.Inject
 
-class LocalNoteTagCrossRefRepo(
+class LocalNoteTagCrossRefRepo @Inject constructor(
     private val noteTagCrossRefDao: NoteTagCrossRefDao
 ) : NoteTagCrossRefRepo {
     override suspend fun attachTag(ref: NoteTagCrossRef) {

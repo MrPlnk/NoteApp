@@ -7,13 +7,20 @@ import ru.krivenchukartem.noteapp.data.room.dao.NoteDao
 import ru.krivenchukartem.noteapp.data.room.dao.NoteFullDao
 import ru.krivenchukartem.noteapp.data.room.dao.NoteTagCrossRefDao
 import ru.krivenchukartem.noteapp.data.room.dao.TagDao
+import ru.krivenchukartem.noteapp.data.room.entity.AttachmentItem
 import ru.krivenchukartem.noteapp.data.room.entity.NoteItem
 import ru.krivenchukartem.noteapp.data.room.entity.NoteTagCrossRefItem
+import ru.krivenchukartem.noteapp.data.room.entity.TagItem
 
 @Database(
-    entities = [NoteItem::class],
-    version = 3,
-    exportSchema = false
+    entities = [
+        NoteItem::class,
+        AttachmentItem::class,
+        NoteTagCrossRefItem::class,
+        TagItem::class
+       ],
+    version = 4,
+    exportSchema = true
 )
 
 abstract class NoteDatabase: RoomDatabase() {

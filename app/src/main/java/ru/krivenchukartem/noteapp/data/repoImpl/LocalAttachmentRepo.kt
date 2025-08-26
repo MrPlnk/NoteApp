@@ -7,8 +7,9 @@ import ru.krivenchukartem.noteapp.data.room.mapper.toEntity
 import ru.krivenchukartem.noteapp.data.room.mapper.toModel
 import ru.krivenchukartem.noteapp.domain.model.Attachment
 import ru.krivenchukartem.noteapp.domain.repo.AttachmentRepo
+import javax.inject.Inject
 
-class LocalAttachmentRepo(
+class LocalAttachmentRepo @Inject constructor(
     private val attachmentDao: AttachmentDao
 ) : AttachmentRepo{
     override suspend fun insertAttachment(attachment: Attachment): Long {

@@ -6,7 +6,7 @@ import androidx.room.Index
 
 @Entity(
     tableName = "note_tag",
-    primaryKeys = ["notedId", "tagId"],
+    primaryKeys = ["noteId", "tagId"],
     indices = [Index("tagId"), Index("noteId")],
     foreignKeys = [
         ForeignKey(entity = NoteItem::class, parentColumns = ["id"], childColumns = ["noteId"], onDelete = ForeignKey.CASCADE),

@@ -1,16 +1,18 @@
 package ru.krivenchukartem.noteapp.domain.useCase
 
+import kotlinx.coroutines.flow.first
 import ru.krivenchukartem.noteapp.domain.model.Note
+import ru.krivenchukartem.noteapp.domain.model.NoteFull
+import ru.krivenchukartem.noteapp.domain.repo.NoteQueryRepo
 import ru.krivenchukartem.noteapp.domain.repo.NoteRepo
 import javax.inject.Inject
 
 class GetNoteByIdUseCaseSnapshot @Inject constructor(
-    private val noteRepo: NoteRepo
+    private val noteQueryRepo: NoteQueryRepo
 ) {
-    suspend operator fun invoke(id: Long): Note? {
-        if (id == 0L) return Note(0, "", "", 0L, 0L, false)
-        val existingNote = noteRepo.getNoteById(id)
+    suspend operator fun invoke(id: Long): NoteFull? {
+        if (id == 0L) return null
+        val existingNote = noteQueryRepo.getNoteFullById(id).first()
         return existingNote
-
     }
 }

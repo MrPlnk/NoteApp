@@ -6,6 +6,7 @@ import androidx.room.Relation
 
 data class NoteFullItem(
     @Embedded val note: NoteItem,
+    
     @Relation(
         parentColumn = "id",
         entity = TagItem::class,
