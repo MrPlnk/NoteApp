@@ -5,6 +5,12 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+/**
+ * Сущность вложения для таблицы `attachments`.
+ *
+ * Хранит ссылку на заметку через [noteId] и URI файла.
+ * При удалении заметки все её вложения удаляются (CASCADE).
+ */
 @Entity(
     tableName = "attachments",
     indices = [Index("noteId")],

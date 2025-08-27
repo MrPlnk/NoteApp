@@ -8,9 +8,18 @@ import androidx.navigation.navigation
 import kotlinx.serialization.Serializable
 import ru.krivenchukartem.noteapp.ui.navigation.Home
 
+/**
+ * Точка назначения для экрана «Home» в графе навигации.
+ */
 @Serializable
 object HomeScreenDestination
 
+/**
+ * Конфигурация навигации для раздела Home.
+ *
+ * @param navigateBack callback для возврата назад
+ * @param navigateToNoteDetails переход к экрану деталей заметки по id
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.homeDestination(
     navigateBack: () -> Unit,
@@ -23,6 +32,11 @@ fun NavGraphBuilder.homeDestination(
     }
 }
 
+/**
+ * Экран Home внутри графа навигации.
+ *
+ * @param navigateToNoteDetails переход к экрану деталей заметки по id
+ */
 fun NavGraphBuilder.homeScreenDestination(
     navigateToNoteDetails: (Long) -> Unit,
 ){

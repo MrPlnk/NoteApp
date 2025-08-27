@@ -14,6 +14,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import ru.krivenchukartem.noteapp.R
 
+/**
+ * Компонент для отображения ошибки в виде карточки.
+ *
+ * @param errorMessage текст ошибки
+ * @param modifier модификатор Compose
+ */
 @Composable
 fun ErrorMessage(
     errorMessage: String,

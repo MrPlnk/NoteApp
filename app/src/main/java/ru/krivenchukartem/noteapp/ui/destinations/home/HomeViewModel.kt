@@ -15,6 +15,14 @@ import kotlinx.coroutines.flow.stateIn
 import ru.krivenchukartem.noteapp.domain.useCase.SearchNoteUseCaseStream
 import javax.inject.Inject
 
+/**
+ * ViewModel для главного экрана (списка заметок).
+ *
+ * - Управляет состоянием поиска ([SearchState]).
+ * - Формирует [homeUiState], преобразуя результат [SearchNoteUseCaseStream].
+ *
+ * Возвращает: [StateFlow] с состоянием экрана [HomeUiState].
+ */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val searchNote: SearchNoteUseCaseStream
@@ -61,18 +69,35 @@ class HomeViewModel @Inject constructor(
         _searchState.value = _searchState.value.copy(query = newText)
     }
 }
-
+/**
+ * UI-состояние главного экрана.
+ */
 sealed interface HomeUiState{
+
+    /** Успешная загрузка данных. */
     data class Success(val local: HomeLocalState) : HomeUiState
+
+    /** Данные загружаются. */
     object Loading : HomeUiState
+
+    /** Ошибка загрузки. */
     data class Error(val message: String): HomeUiState
 }
 
+/**
+ * Локальное состояние главного экрана.
+ *
+ * @property notes список заметок
+ * @property firstUnpinnedIndex индекс первой незакреплённой заметки
+ */
 data class HomeLocalState(
     val notes: List<NoteState> = listOf(),
     val firstUnpinnedIndex: Int = 0
 )
 
+/**
+ * Отображаемое состояние заметки на главном экране.
+ */
 data class NoteState(
     val id: Long = 0,
     val title: String = "",
@@ -81,6 +106,12 @@ data class NoteState(
     val tags: List<String> = listOf()
 )
 
+/**
+ * Состояние поиска.
+ *
+ * @property query строка поиска
+ * @property tags выбранные теги
+ */
 data class SearchState(
     val query: String = "",
     val tags: List<String> = listOf()

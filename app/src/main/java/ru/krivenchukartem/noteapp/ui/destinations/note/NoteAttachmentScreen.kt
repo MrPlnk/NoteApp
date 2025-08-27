@@ -32,6 +32,17 @@ import ru.krivenchukartem.noteapp.ui.composable.ErrorScreen
 import ru.krivenchukartem.noteapp.ui.composable.NoteTopAppBar
 import ru.krivenchukartem.noteapp.ui.form.AttachmentForm
 
+/**
+ * Экран вложений заметки.
+ *
+ * В зависимости от состояния [AttachmentsUiState]:
+ * - показывает экран ошибки ([ErrorScreen]),
+ * - индикатор загрузки,
+ * - либо контент через [NoteAttachmentScaffold].
+ *
+ * @param viewModel ViewModel экрана вложений
+ * @param navigateBack callback для возврата назад
+ */
 @Composable
 fun NoteAttachmentScreen(
     viewModel: NoteAttachmentViewModel,
@@ -51,9 +62,20 @@ fun NoteAttachmentScreen(
     }
 }
 
+/**
+ * Scaffold-обертка для экрана вложений.
+ *
+ * Включает верхнюю панель ([NoteTopAppBar]) с отображением текущего индекса и количества вложений,
+ * а также тело экрана ([NoteAttachmentBody]).
+ *
+ * @param navigateBack callback для возврата назад
+ * @param updateIdx callback при смене текущей страницы
+ * @param localState состояние экрана с вложениями
+ * @param modifier модификатор Compose
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteAttachmentScaffold(
+private fun NoteAttachmentScaffold(
     navigateBack: () -> Unit,
     updateIdx: (Int) -> Unit,
     localState: LocalUiState,
@@ -84,8 +106,19 @@ fun NoteAttachmentScaffold(
     }
 }
 
+/**
+ * Тело экрана вложений.
+ *
+ * Реализует горизонтальный пейджинг ([HorizontalPager]) для просмотра изображений.
+ * Поддерживает индикатор загрузки и отображение ошибки для каждого вложения.
+ *
+ * @param attachments список вложений
+ * @param updateIdx callback при смене текущей страницы
+ * @param currentIdx начальный индекс страницы
+ * @param modifier модификатор Compose
+ */
 @Composable
-fun NoteAttachmentBody(
+private fun NoteAttachmentBody(
     attachments: List<AttachmentForm>,
     updateIdx: (Int) -> Unit,
     currentIdx: Int,

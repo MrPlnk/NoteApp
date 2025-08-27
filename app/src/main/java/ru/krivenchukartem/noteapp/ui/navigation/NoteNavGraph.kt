@@ -14,12 +14,27 @@ import ru.krivenchukartem.noteapp.ui.destinations.note.noteDestination
 import ru.krivenchukartem.noteapp.ui.destinations.note.NoteDetailsDestination
 import ru.krivenchukartem.noteapp.ui.destinations.note.navigateToNoteAttachmentScreen
 
+/**
+ * Корневой раздел графа навигации — Home.
+ */
 @Serializable
 object Home
 
+/**
+ * Корневой раздел графа навигации — Note.
+ */
 @Serializable
 object Note
 
+/**
+ * Основной граф навигации приложения.
+ *
+ * Содержит разделы:
+ * - [Home] — главный экран
+ * - [Note] — экраны заметок (детали, вложения)
+ *
+ * @param navHostController контроллер навигации (по умолчанию создаётся через [rememberNavController])
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NoteNavGraph(
@@ -40,10 +55,18 @@ fun NoteNavGraph(
     }
 }
 
+/**
+ * Переход к экрану Home.
+ */
 fun NavController.navigateToHome(){
     navigate(route = HomeScreenDestination)
 }
 
+/**
+ * Переход к экрану деталей заметки.
+ *
+ * @param id идентификатор заметки
+ */
 fun NavController.navigateToNote(id: Long){
     navigate(route = NoteDetailsDestination(noteId = id))
 }

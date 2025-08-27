@@ -9,6 +9,15 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import ru.krivenchukartem.noteapp.R
 
+/**
+ * Экран отображения ошибки.
+ *
+ * Содержит [NoteTopAppBar] с кнопкой «назад» и сообщение об ошибке в [ErrorMessage].
+ *
+ * @param navigateBack callback для возврата назад
+ * @param errorMessage текст ошибки
+ * @param modifier модификатор Compose
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ErrorScreen(

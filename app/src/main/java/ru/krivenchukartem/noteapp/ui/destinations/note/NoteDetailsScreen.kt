@@ -79,7 +79,19 @@ import ru.krivenchukartem.noteapp.ui.composable.ErrorMessage
 import ru.krivenchukartem.noteapp.ui.composable.NoteTopAppBar
 import ru.krivenchukartem.noteapp.ui.form.AttachmentForm
 
-
+/**
+ * Экран деталей заметки.
+ *
+ * Включает:
+ * - верхнюю панель с кнопкой «назад» и действиями (пин, добавление вложений);
+ * - тело заметки ([NoteDetailsBody]);
+ * - нижнюю панель с кнопками удаления, шаринга и сохранения.
+ *
+ * @param viewModel ViewModel экрана
+ * @param navigateBack callback для возврата назад
+ * @param navigateToNoteAttachmentScreen переход к экрану вложений
+ * @param modifier модификатор Compose
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -184,9 +196,21 @@ fun NoteDetailsScreen(
     }
 }
 
+/**
+ * Тело экрана деталей заметки.
+ *
+ * Содержит список вложений, поле заголовка и поле текста.
+ *
+ * @param localState состояние заметки
+ * @param navigateToNoteAttachmentScreen переход к экрану вложений
+ * @param onTitleChanged callback при изменении заголовка
+ * @param onBodyChanged callback при изменении текста
+ * @param onDeleteAttachment callback для удаления вложений
+ * @param modifier модификатор Compose
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NoteDetailsBody(
+private fun NoteDetailsBody(
     localState: NoteDetailsUIState.Success,
     navigateToNoteAttachmentScreen: (Long, Int) -> Unit,
     onTitleChanged: (String) -> Unit,
@@ -226,8 +250,16 @@ fun NoteDetailsBody(
     }
 }
 
+/**
+ * Список вложений в заметке.
+ *
+ * @param noteId идентификатор заметки (если 0 — вложения не открываются и показывается иконка замка)
+ * @param attachments список вложений
+ * @param onDeleteAttachment callback удаления вложения
+ * @param navigateToNoteAttachmentScreen переход к экрану вложений
+ */
 @Composable
-fun AttachmentsList(
+private fun AttachmentsList(
     noteId: Long,
     attachments: List<AttachmentForm>,
     onDeleteAttachment: (Long) -> Unit,
@@ -309,8 +341,11 @@ fun AttachmentsList(
     }
 }
 
+/**
+ * Поле ввода заголовка заметки.
+ */
 @Composable
-fun NoteTitleField(
+private fun NoteTitleField(
     text: String,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -353,9 +388,12 @@ fun NoteTitleField(
     )
 }
 
+/**
+ * Поле ввода текста заметки с авто-прокруткой к курсору.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NoteBodyFieldAutoScroll(
+private fun NoteBodyFieldAutoScroll(
     text: String,
     onTextChange: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -417,8 +455,16 @@ fun NoteBodyFieldAutoScroll(
     }
 }
 
+/**
+ * Кнопка добавления вложений.
+ *
+ * Открывает системный выбор фото (PhotoPicker или OpenDocument).
+ *
+ * @param onPicked callback со списком выбранных URI
+ * @param maxItems максимальное количество файлов
+ */
 @Composable
-fun InsertAttachmentsButton(
+private fun InsertAttachmentsButton(
     onPicked: (List<Uri>) -> Unit,
     maxItems: Int = 10,
 ){

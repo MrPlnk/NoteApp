@@ -38,7 +38,18 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import ru.krivenchukartem.noteapp.ui.composable.ErrorMessage
 
-
+/**
+ * Экран списка заметок (домашний экран).
+ *
+ * Включает:
+ * - строку поиска заметок,
+ * - список закреплённых и обычных заметок ([HomeBody]),
+ * - кнопку добавления новой заметки.
+ *
+ * @param navigateToNoteDetails переход к экрану деталей заметки (id = 0L → новая заметка)
+ * @param viewModel ViewModel экрана
+ * @param modifier модификатор Compose
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -114,8 +125,18 @@ fun HomeScreen(
     }
 }
 
+/**
+ * Содержимое домашнего экрана.
+ *
+ * Отображает список заметок с разделением на закреплённые и обычные.
+ * Если список пуст, показывает текст-заглушку.
+ *
+ * @param homeLocalState локальное состояние со списком заметок
+ * @param navigateToNoteDetails переход к экрану деталей заметки
+ * @param modifier модификатор Compose
+ */
 @Composable
-fun HomeBody(
+private fun HomeBody(
     homeLocalState: HomeLocalState,
     navigateToNoteDetails: (Long) -> Unit,
     modifier: Modifier = Modifier
@@ -190,8 +211,18 @@ fun HomeBody(
     }
 }
 
+/**
+ * Виджет отдельной заметки.
+ *
+ * Отображает заголовок и текст заметки (если они непустые).
+ * Кликабельный — открывает экран деталей по id заметки.
+ *
+ * @param note данные заметки
+ * @param navigateToNoteDetails переход к экрану деталей заметки
+ * @param modifier модификатор Compose
+ */
 @Composable
-fun NoteWidget(
+private fun NoteWidget(
     note: NoteState,
     navigateToNoteDetails: (Long) -> Unit,
     modifier: Modifier = Modifier,

@@ -6,12 +6,22 @@ import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import ru.krivenchukartem.noteapp.data.room.entity.NoteFullItem
 
+/**
+ * DAO для выборок заметок вместе с тегами и вложениями ([NoteFullItem]).
+ */
 @Dao
 interface NoteFullDao {
+    /**
+     * Возвращает заметку по id с её тегами и вложениями.
+     */
     @Transaction
     @Query("SELECT * FROM notes WHERE id = :reqId")
     fun getNoteFullById(reqId: Long): Flow<NoteFullItem?>
 
+    /**
+     * Возвращает все заметки с тегами и вложениями.
+     * Сортировка: сначала закреплённые, затем по дате создания (убывание).
+     */
     @Transaction
     @Query("""
         SELECT * FROM notes
@@ -19,6 +29,15 @@ interface NoteFullDao {
         """)
     fun getAllNotesFull(): Flow<List<NoteFullItem>>
 
+    /**
+     * Фильтрует заметки по строке поиска и выбранным тегам.
+     *
+     * Условия:
+     * - query: если пустая, игнорируется; иначе ищет в title и body.
+     * - selectedTagNames: оставляет только заметки, у которых есть все указанные теги.
+     *
+     * Сортировка аналогична [getAllNotesFull].
+     */
     @Transaction
     @Query("""
         SELECT n.* FROM notes n

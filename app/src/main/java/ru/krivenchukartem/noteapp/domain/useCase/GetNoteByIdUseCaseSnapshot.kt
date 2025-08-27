@@ -5,6 +5,11 @@ import ru.krivenchukartem.noteapp.domain.model.NoteFull
 import ru.krivenchukartem.noteapp.domain.repo.NoteQueryRepo
 import javax.inject.Inject
 
+/**
+ * UseCase для получения заметки с тегами и вложениями по id.
+ *
+ * Возвращает: [NoteFull] или `null`, если заметка не найдена.
+ */
 class GetNoteByIdUseCaseSnapshot @Inject constructor(
     private val noteQueryRepo: NoteQueryRepo
 ) {

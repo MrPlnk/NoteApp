@@ -25,6 +25,16 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+/**
+ * ViewModel для экрана деталей заметки.
+ *
+ * - Загружает заметку по id через [GetNoteByIdUseCaseSnapshot].
+ * - Сохраняет/обновляет заметку через [UpsertNoteUseCase].
+ * - Удаляет заметку ([DeleteNoteUseCase]) и вложения ([DeleteAttachmentByIdUseCase]).
+ * - Управляет состоянием UI ([NoteDetailsUIState]).
+ *
+ * Возвращает: [NoteDetailsUIState] через [uiState].
+ */
 @HiltViewModel
 class NoteDetailsViewModel @Inject constructor(
     private val getNoteById: GetNoteByIdUseCaseSnapshot,
@@ -185,9 +195,18 @@ class NoteDetailsViewModel @Inject constructor(
     }
 }
 
+/**
+ * UI-состояние экрана деталей заметки.
+ */
 sealed interface NoteDetailsUIState{
+
+    /** Данные загружаются. */
     object Loading : NoteDetailsUIState
+
+    /** Ошибка загрузки или сохранения. */
     data class Error(val message: String) : NoteDetailsUIState
+
+    /** Успешное состояние с заметкой. */
     data class Success(
         val noteFullForm: NoteFullForm,
         val isSaving: Boolean = false

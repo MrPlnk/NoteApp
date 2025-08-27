@@ -4,6 +4,13 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 
+/**
+ * Композитная модель заметки с тегами и вложениями.
+ *
+ * Используется для выборок с объединением:
+ * - [tags] связаны через таблицу `NoteTagCrossRefItem`.
+ * - [attachments] связаны по внешнему ключу `noteId`.
+ */
 data class NoteFullItem(
     @Embedded val note: NoteItem,
     

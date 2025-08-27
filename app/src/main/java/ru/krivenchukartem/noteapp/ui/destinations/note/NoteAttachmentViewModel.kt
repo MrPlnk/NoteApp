@@ -14,6 +14,16 @@ import ru.krivenchukartem.noteapp.ui.form.AttachmentForm
 import ru.krivenchukartem.noteapp.ui.mapper.toForm
 import javax.inject.Inject
 
+/**
+ * ViewModel для экрана просмотра вложений заметки.
+ *
+ * - Загружает вложения через [GetNoteByIdUseCaseSnapshot].
+ * - Удаляет вложения через [DeleteAttachmentByIdUseCase].
+ * - Управляет состоянием UI ([AttachmentsUiState]).
+ *
+ * @property noteId идентификатор заметки
+ * @property currentIndex индекс текущего вложения для отображения
+ */
 @HiltViewModel
 class NoteAttachmentViewModel @Inject constructor(
     private val getNoteById: GetNoteByIdUseCaseSnapshot,
@@ -69,12 +79,26 @@ class NoteAttachmentViewModel @Inject constructor(
     }
 }
 
+/**
+ * UI-состояние экрана вложений.
+ */
 sealed interface AttachmentsUiState{
+    /** Ошибка загрузки или работы с вложениями. */
     data class Error(val message: String) : AttachmentsUiState
+
+    /** Успешная загрузка вложений. */
     data class Success(val localState: LocalUiState) : AttachmentsUiState
+
+    /** Загрузка в процессе. */
     object Loading : AttachmentsUiState
 }
 
+/**
+ * Локальное состояние экрана вложений.
+ *
+ * @property attachments список вложений
+ * @property currentIdx индекс текущего вложения
+ */
 data class LocalUiState(
     val attachments: List<AttachmentForm> = listOf(),
     val currentIdx: Int = 0

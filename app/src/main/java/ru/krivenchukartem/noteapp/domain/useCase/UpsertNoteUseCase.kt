@@ -10,6 +10,16 @@ import ru.krivenchukartem.noteapp.domain.repo.NoteTagCrossRefRepo
 import ru.krivenchukartem.noteapp.domain.repo.TagRepo
 import javax.inject.Inject
 
+/**
+ * UseCase для создания или обновления заметки с тегами и вложениями.
+ *
+ * - Если [NoteFull.note.id] = 0 → создаёт новую заметку.
+ * - Иначе обновляет существующую.
+ * - Обновляет связи заметки с тегами (добавляет новые, удаляет отсутствующие).
+ * - Пересохраняет вложения: удаляет старые и вставляет новые.
+ *
+ * Возвращает: [Long] — id заметки.
+ */
 class UpsertNoteUseCase @Inject constructor(
     private val noteRepo: NoteRepo,
     private val tagRepo: TagRepo,

@@ -15,6 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import ru.krivenchukartem.noteapp.R
 
+/**
+ * Верхняя панель приложения для экрана заметок.
+ *
+ * Использует [CenterAlignedTopAppBar].
+ *
+ * @param title заголовок панели
+ * @param modifier модификатор Compose
+ * @param scrollBehavior поведение прокрутки (опционально)
+ * @param canNavigateBack если true — отображается кнопка «назад»
+ * @param navigateBack callback при нажатии на кнопку «назад»
+ * @param actionsButtons слот для дополнительных action-кнопок справа
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteTopAppBar(
